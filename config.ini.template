@@ -1,0 +1,18 @@
+[basic]
+runInBackground = False
+testInterval = 10
+logLevel = CRITICAL
+
+[speedtest]
+logVerbosity = 1
+serverID = -1
+hostname =
+ipAddress =
+interface =
+
+[paths]
+speedtestDir = ./speedtest
+migrationsDir = ./migrations
+dbDir = ./db
+pythonExe = python
+pythonwExe = pythonw
