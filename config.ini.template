@@ -1,7 +1,7 @@
 [basic]
 runInBackground = False
 testInterval = 10
-logLevel = DEBUG
+logLevel = CRITICAL
 
 [speedtest]
 logVerbosity = 1
