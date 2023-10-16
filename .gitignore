@@ -3,3 +3,4 @@ db/*
 speedtest/*
 .idea/*
 config.ini
+__pycache__
