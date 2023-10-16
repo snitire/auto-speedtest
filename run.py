@@ -37,6 +37,5 @@ else:
 
         # Launch app with either pythonw (if running in background) or python
         system(launchCommand)
-        logger.info("Successfully launched main app")
     except:
         logger.critical(f"Unable to launch app after reading config: ", exc_info=1)
