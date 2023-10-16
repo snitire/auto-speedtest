@@ -30,6 +30,7 @@ try:
     logger.debug(f"Read values logLevel={logLevel}, runInBackground={runInBackground}, exeName={exeName}")
 except:
     logger.critical(f"Unable to read values from config file at {CONFIG_PATH}: ", exc_info=1)
+    exit()
 else:
     try:
         launchCommand = f"{exeName} app/app.py"
@@ -38,4 +39,6 @@ else:
         # Launch app with either pythonw (if running in background) or python
         system(launchCommand)
     except:
-        logger.critical(f"Unable to launch app after reading config: ", exc_info=1)
+        # Only reached synchronously if the app dies for whatever reason
+        logger.critical(f"Fatal error while running app: ", exc_info=1)
+        exit()
