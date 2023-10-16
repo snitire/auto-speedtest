@@ -2,3 +2,4 @@ logs/*
 db/*
 speedtest/*
 .idea/*
+config.ini
