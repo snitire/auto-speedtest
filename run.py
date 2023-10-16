@@ -31,5 +31,12 @@ try:
 except:
     logger.critical(f"Unable to read values from config file at {CONFIG_PATH}: ", exc_info=1)
 else:
-    # Launch app with either pythonw (if running in background) or python
-    system(f"{exeName} app/app.py")
+    try:
+        launchCommand = f"{exeName} app/app.py"
+        logger.debug(f"App launch command: {launchCommand}")
+
+        # Launch app with either pythonw (if running in background) or python
+        system(launchCommand)
+        logger.info("Successfully launched main app")
+    except:
+        logger.critical(f"Unable to launch app after reading config: ", exc_info=1)
