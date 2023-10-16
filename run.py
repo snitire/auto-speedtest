@@ -1,7 +1,7 @@
-import logging
 import logging.config
 import yaml
 from configparser import ConfigParser
+from os import system
 
 CONFIG_PATH = "./config.ini"
 LOG_CONFIG_PATH = "./app_log_config.yaml"
@@ -30,3 +30,6 @@ try:
     logger.debug(f"Read values logLevel={logLevel}, runInBackground={runInBackground}, exeName={exeName}")
 except:
     logger.critical(f"Unable to read values from config file at {CONFIG_PATH}: ", exc_info=1)
+else:
+    # Launch app with either pythonw (if running in background) or python
+    system(f"{exeName} app/app.py")
