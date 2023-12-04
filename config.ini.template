@@ -13,6 +13,6 @@ interface =
 [paths]
 speedtestExe = ./speedtest/speedtest.exe
 migrationsDir = ./migrations
-dbDir = ./db
+dbPath = ./db/speedtestDB.db
 pythonExe = python
 pythonwExe = pythonw
