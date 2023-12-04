@@ -1,4 +1,5 @@
 import logging.config
+import db
 import yaml
 from configparser import ConfigParser
 from speedtest import Speedtest
@@ -13,11 +14,23 @@ def doPeriodicTest():
     testResult = speedtest.runTest()
     logger.debug(f"Received test results: {testResult}")
 
+    testDate = f"'{testResult['timestamp']}'"
+    ping = f"'{testResult['ping']['latency']}'"
+    downloadMbps = f"'{testResult['download']['bandwidthMbps']}'"
+    uploadMbps = f"'{testResult['upload']['bandwidthMbps']}'"
+    packetLoss = f"'{testResult['packetLoss']}'"
+    url = f"'{testResult['result']['url']}'"
 
-# Logger setup
+    db.addRecord("results",
+                 ["test_date", "ping", "download_mbps", "upload_mbps", "packet_loss", "url"],
+                 [testDate, ping, downloadMbps, uploadMbps, packetLoss, url]
+                 )
+
+# Logger setup and config reading
 with open(LOG_CONFIG_PATH) as file:
     conf = yaml.safe_load(file.read())
     logging.config.dictConfig(conf)
+
 logger = logging.getLogger(__name__)
 
 logger.info("Starting main app")
@@ -50,12 +63,15 @@ except:
 speedtest = Speedtest(speedtestExe, st_logVerbosity, st_serverID, st_hostname, st_ipAddress, st_interface)
 logger.debug(f"Speedtest object created: {speedtest}")
 
+# Initialize database for test results
+db.setupDb()
+
 # Start periodic testing
 delay = interval * 60  # Interval in seconds
 
 logger.info(f"Starting periodic speedtest running and collecting of results every {interval} minutes")
-if interval < 2.0:
-    logger.warning("A very short interval between tests (<2 minutes) may cause issues")
+if interval < 1.1:
+    logger.warning("A very short interval between tests (<1 minute) may cause issues")
 
 while True:
     logger.info("New periodic test started")
