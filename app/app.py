@@ -2,10 +2,17 @@ import logging.config
 import yaml
 from configparser import ConfigParser
 from speedtest import Speedtest
+import sched
 
 # When launched by run.py, the CWD does not change from ./ to ./app/
 CONFIG_PATH = "./config.ini"
 LOG_CONFIG_PATH = "./app_log_config.yaml"
+
+
+def doPeriodicTest():
+    testResult = speedtest.runTest()
+    logger.debug(f"Received test results: {testResult}")
+
 
 # Logger setup
 with open(LOG_CONFIG_PATH) as file:
@@ -43,6 +50,12 @@ else:
     speedtest = Speedtest(speedtestExe, st_logVerbosity, st_serverID, st_hostname, st_ipAddress, st_interface)
     logger.debug(f"Speedtest object created: {speedtest}")
 
-testResult = speedtest.runTest()
+    # Initialize scheduler and start periodic testing
+    scheduler = sched.scheduler()
+    delay = interval * 60
 
-logger.info(f"Received test results: {testResult}")
+    logger.info(f"Started periodic testing, running and saving test results every {interval} minutes")
+    if interval < 2:
+        logger.warning("Using a short interval between tests (<2 mins) may cause issues")
+
+    scheduler.enter(delay, 1, doPeriodicTest)
