@@ -86,7 +86,7 @@ class Speedtest:
         :return: Parsed JSON results of the run
         :rtype: dict
         """
-        self.logger.info("Attempting a run of speedtesting")
+        self.logger.debug("Attempting a run of speedtesting")
         args = self.getArgs()
 
         # Call the run using the args and save stdout and stderr output
