@@ -3,7 +3,7 @@ import yaml
 from configparser import ConfigParser
 from speedtest import Speedtest
 
-# When launched by run.py, the CWD does not change!!!
+# When launched by run.py, the CWD does not change from ./ to ./app/
 CONFIG_PATH = "./config.ini"
 LOG_CONFIG_PATH = "./app_log_config.yaml"
 
