@@ -1,0 +1,25 @@
+version: 1
+formatters:
+  short:
+    format: '%(asctime)s [%(levelname)s]: %(message)s'
+  full:
+    format: 'IN %(module)s AT %(asctime)s [%(levelname)s]: %(message)s'
+
+handlers:
+  file:
+    class: logging.handlers.TimedRotatingFileHandler
+    level: NOTSET
+    formatter: full
+    filename: logs/APP.log
+    when: 'midnight'
+    encoding: 'utf-8'
+    backupCount: 7
+  console:
+    class: logging.StreamHandler
+    level: NOTSET
+    formatter: short
+    stream: ext://sys.stdout
+
+root:
+  level: DEBUG
+  handlers: [file, console]
