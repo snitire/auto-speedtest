@@ -102,10 +102,13 @@ class Speedtest:
         try:
             result = json.loads(runResult.stdout)
 
-            result["status"] = "ok"
-            # Converting bytes per second to megabits per second for readability
-            result["download"]["bandwidthMbps"] = result["download"]["bandwidth"] / 125000
-            result["upload"]["bandwidthMbps"] = result["upload"]["bandwidth"] / 125000
+            if "error" not in result:
+                result["status"] = "ok"
+                # Converting bytes per second to megabits per second for readability
+                result["download"]["bandwidthMbps"] = result["download"]["bandwidth"] / 125000
+                result["upload"]["bandwidthMbps"] = result["upload"]["bandwidth"] / 125000
+            else:
+                result["status"] = "fail"
 
             self.logger.debug(f"Returned dict: {result}")
             return result
