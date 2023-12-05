@@ -14,17 +14,29 @@ def doPeriodicTest():
     testResult = speedtest.runTest()
     logger.debug(f"Received test results: {testResult}")
 
-    testDate = f"'{testResult['timestamp']}'"
-    ping = f"'{testResult['ping']['latency']}'"
-    downloadMbps = f"'{testResult['download']['bandwidthMbps']}'"
-    uploadMbps = f"'{testResult['upload']['bandwidthMbps']}'"
-    packetLoss = f"'{testResult['packetLoss']}'"
-    url = f"'{testResult['result']['url']}'"
+    if testResult["status"] == "ok":
+        testDate = f"'{testResult['timestamp']}'"
+        ping = f"'{testResult['ping']['latency']}'"
+        downloadMbps = f"'{testResult['download']['bandwidthMbps']}'"
+        uploadMbps = f"'{testResult['upload']['bandwidthMbps']}'"
+        url = f"'{testResult['result']['url']}'"
 
-    db.addRecord("results",
-                 ["test_date", "ping", "download_mbps", "upload_mbps", "packet_loss", "url"],
-                 [testDate, ping, downloadMbps, uploadMbps, packetLoss, url]
-                 )
+        # Packet loss can occasionally not be found in the results for some reason
+        if "packetLoss" in testResult:
+            packetLoss = f"'{testResult['packetLoss']}'"
+        else:
+            packetLoss = -1
+
+        db.addRecord("results",
+                     ["test_date", "ping", "download_mbps", "upload_mbps", "packet_loss", "url"],
+                     [testDate, ping, downloadMbps, uploadMbps, packetLoss, url]
+                     )
+    else:
+        if "error" in testResult:
+            logger.warning(f"Unexpected error after running periodic test: '{testResult['error']}'")
+        else:
+            logger.error(f"Periodic test failed with no returned error")
+
 
 # Logger setup and config reading
 with open(LOG_CONFIG_PATH) as file:
